@@ -1,3 +1,5 @@
+import "server-only";
+
 import { Card } from "@/components/ui/card";
 import { cookies } from "next/headers";
 import { Octokit } from "octokit";
