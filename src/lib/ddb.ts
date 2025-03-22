@@ -45,7 +45,7 @@ interface RepositoryItem {
     repositoryName: string;
     repositoryDescription: string;
     repositoryUrl: string;
-    chats: Chat[]
+    chats: Chat[];
 }
 
 interface Repository {
@@ -55,7 +55,7 @@ interface Repository {
     repositoryName: string;
     repositoryDescription: string;
     repositoryUrl: string;
-    chats: Chat[]
+    chats: Chat[];
 }
 
 export class DynamoDBService {

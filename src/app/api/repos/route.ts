@@ -17,10 +17,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         per_page: 80
     });
 
-    return NextResponse.json(repos.data.map((repo) => ({
-        id: repo.id,
-        name: repo.name,
-        description: repo.description,
-        url: repo.html_url
-    })));
+    return NextResponse.json(
+        repos.data.map((repo) => ({
+            id: repo.id,
+            name: repo.name,
+            description: repo.description,
+            url: repo.html_url
+        }))
+    );
 }

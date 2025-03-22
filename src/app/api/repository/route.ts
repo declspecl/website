@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const CreateRepositorySchema = z.object({
     repositoryName: z.string(),
-    repositoryBranch: z.string(),
+    repositoryBranch: z.string()
 });
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -20,8 +20,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     let payload;
     try {
         payload = CreateRepositorySchema.parse(await request.json());
-    }
-    catch (error) {
+    } catch (error) {
         return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
 
@@ -51,7 +50,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         repositoryBranch: payload.repositoryBranch,
         repositoryUrl: repo.data.html_url,
         chats: []
-    })
+    });
     console.log("Created repository");
 
     return NextResponse.json({ message: "Repository created successfully" }, { status: 200 });
