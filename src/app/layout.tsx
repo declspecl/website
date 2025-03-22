@@ -4,25 +4,23 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+    variable: "--font-inter",
+    subsets: ["latin"]
 });
 
 export const metadata: Metadata = {
-  title: "DuckDuckCode",
-  description: "DuckDuckCode",
+    title: "DuckDuckCode",
+    description: "DuckDuckCode"
 };
 
 interface RootLayoutProps {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
-  return (
-    <html lang="en">
-      <body className={`${inter.variable}`}>
-        {children}
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en">
+            <body className={`${inter.variable}`}>{children}</body>
+        </html>
+    );
 }

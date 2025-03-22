@@ -37,7 +37,7 @@ export class DynamoDBService {
     constructor(ddbClient: DynamoDBClient) {
         this.ddbClient = ddbClient;
     }
-    
+
     public async createUser(user: User): Promise<void> {
         const item: UserItem = {
             pk: `USER#${user.userId}`,
@@ -46,7 +46,7 @@ export class DynamoDBService {
             name: user.name,
             avatarUrl: user.avatarUrl,
             githubUsername: user.githubUsername
-        }
+        };
 
         const response = await this.ddbClient.send(
             new PutCommand({
@@ -63,7 +63,7 @@ export class DynamoDBService {
             new GetCommand({
                 TableName: TABLE_NAME,
                 Key: {
-                    "pk": `USER#${userId}`
+                    pk: `USER#${userId}`
                 }
             })
         );
@@ -77,7 +77,7 @@ export class DynamoDBService {
             pk: `TOKEN#${accessToken.token}`,
             token: accessToken.token,
             userId: accessToken.userId
-        }
+        };
 
         const response = await this.ddbClient.send(
             new PutCommand({
@@ -94,7 +94,7 @@ export class DynamoDBService {
             new GetCommand({
                 TableName: TABLE_NAME,
                 Key: {
-                    "pk": `TOKEN#${token}`
+                    pk: `TOKEN#${token}`
                 }
             })
         );
