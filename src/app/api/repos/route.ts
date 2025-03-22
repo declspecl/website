@@ -1,7 +1,7 @@
 import "server-only";
 
-import { Octokit } from "octokit";
 import { NextRequest, NextResponse } from "next/server";
+import { getReposForAccessToken } from "@/lib/server/repos";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
     const accessToken = request.cookies.get("accessToken")?.value;
@@ -9,20 +9,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const octokit = new Octokit({ auth: accessToken });
-    const repos = await octokit.rest.repos.listForAuthenticatedUser({
-        type: "owner",
-        sort: "created",
-        direction: "desc",
-        per_page: 80
+    return NextResponse.json(getReposForAccessToken(accessToken), {
+        status: 200
     });
-
-    return NextResponse.json(
-        repos.data.map((repo) => ({
-            id: repo.id,
-            name: repo.name,
-            description: repo.description,
-            url: repo.html_url
-        }))
-    );
 }

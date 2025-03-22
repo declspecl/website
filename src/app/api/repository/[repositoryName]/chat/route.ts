@@ -11,9 +11,9 @@ const PublishChatSchema = z.object({
 });
 
 interface PublishChatProps {
-	params: Promise<{
-		repositoryName: string;
-	}>;
+    params: Promise<{
+        repositoryName: string;
+    }>;
 }
 
 export async function POST(request: NextRequest, { params }: PublishChatProps): Promise<NextResponse> {
@@ -40,10 +40,7 @@ export async function POST(request: NextRequest, { params }: PublishChatProps): 
     const ddbClient = new DynamoDBClient();
     const ddbService = new DynamoDBService(ddbClient);
 
-    const repositoryItem = await ddbService.getRepository(
-        userInfo.data.id.toString(),
-        repo.data.id.toString(),
-    );
+    const repositoryItem = await ddbService.getRepository(userInfo.data.id.toString(), repo.data.id.toString());
     if (!repositoryItem) {
         return NextResponse.json({ error: "Repository not found" }, { status: 404 });
     }
