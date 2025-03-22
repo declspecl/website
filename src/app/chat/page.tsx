@@ -19,7 +19,7 @@ export default async function ChatPage() {
     const ddbService = new DynamoDBService(ddbClient);
     const repos = await ddbService.getRepositoriesForUser(userInfo.data.id.toString());
 
-    console.log(repos.length)
+    console.log(repos.length);
     console.log(repos);
 
     return (
@@ -27,9 +27,7 @@ export default async function ChatPage() {
             <div className="flex flex-col gap-2 overflow-y-scroll max-h-[100dvh]">
                 {repos.map((repo) => (
                     <Button key={`repository-${repo.repositoryName}`} asChild>
-                        <Link href={`/chat/${repo.repositoryName}`}>
-                            {repo.repositoryName}
-                        </Link>
+                        <Link href={`/chat/${repo.repositoryName}`}>{repo.repositoryName}</Link>
                     </Button>
                 ))}
             </div>
