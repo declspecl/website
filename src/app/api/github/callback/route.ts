@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 	const body = await gitResponse.json();
 	console.log(body.access_token);
 
-    const response = NextResponse.redirect("http://localhost:3000");
+    const response = NextResponse.redirect("http://localhost:3000/chat");
     response.cookies.set({
         name: "accessToken",
         value: body.access_token,
