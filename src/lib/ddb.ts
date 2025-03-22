@@ -34,7 +34,7 @@ interface AccessToken {
 interface Chat {
     from: "user" | "website";
     message: string;
-    createdAt: number;
+    createdAt: string;
 }
 
 interface RepositoryItem {
@@ -184,7 +184,7 @@ export class DynamoDBService {
         return (response.Item as RepositoryItem | undefined) ?? null;
     }
 
-    public async getRepositorysForUser(userId: string): Promise<RepositoryItem[]> {
+    public async getrepositoriesForUser(userId: string): Promise<RepositoryItem[]> {
         const response = await this.ddbClient.send(
             new ScanCommand({
                 TableName: TABLE_NAME,
