@@ -1,5 +1,6 @@
-import { Octokit } from "octokit";
 import "server-only";
+
+import { Octokit } from "octokit";
 
 export async function getReposForAccessToken(accessToken: string) {
     const octokit = new Octokit({ auth: accessToken });

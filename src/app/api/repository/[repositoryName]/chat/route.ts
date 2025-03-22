@@ -40,7 +40,7 @@ export async function POST(request: NextRequest, { params }: PublishChatProps): 
     const ddbClient = new DynamoDBClient();
     const ddbService = new DynamoDBService(ddbClient);
 
-    const repositoryItem = await ddbService.getRepository(userInfo.data.id.toString(), repo.data.id.toString());
+    const repositoryItem = await ddbService.getRepository(userInfo.data.id.toString(), repositoryName);
     if (!repositoryItem) {
         return NextResponse.json({ error: "Repository not found" }, { status: 404 });
     }

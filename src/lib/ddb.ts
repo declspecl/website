@@ -1,5 +1,5 @@
-import { DynamoDBClient, ScanCommand } from "@aws-sdk/client-dynamodb";
-import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { GetCommand, PutCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 
 const TABLE_NAME = "DDCTable";
 
@@ -149,7 +149,7 @@ export class DynamoDBService {
 
     public async createRepository(repository: Repository): Promise<void> {
         const item: RepositoryItem = {
-            pk: `REPOSITORY#${repository.userId}#${repository.repositoryId}`,
+            pk: `REPOSITORY#${repository.userId}#${repository.repositoryName}`,
             repositoryId: repository.repositoryId,
             userId: repository.userId,
             repositoryBranch: repository.repositoryBranch,
@@ -169,12 +169,12 @@ export class DynamoDBService {
         console.log("Repository created:", response);
     }
 
-    public async getRepository(userId: string, repositoryId: string): Promise<RepositoryItem | null> {
+    public async getRepository(userId: string, repositoryName: string): Promise<RepositoryItem | null> {
         const response = await this.ddbClient.send(
             new GetCommand({
                 TableName: TABLE_NAME,
                 Key: {
-                    pk: `REPOSITORY#${userId}#${repositoryId}`
+                    pk: `REPOSITORY#${userId}#${repositoryName}`
                 }
             })
         );
@@ -184,13 +184,13 @@ export class DynamoDBService {
         return (response.Item as RepositoryItem | undefined) ?? null;
     }
 
-    public async getrepositoriesForUser(userId: string): Promise<RepositoryItem[]> {
+    public async getRepositoriesForUser(userId: string): Promise<RepositoryItem[]> {
         const response = await this.ddbClient.send(
             new ScanCommand({
                 TableName: TABLE_NAME,
                 FilterExpression: "begins_with(pk, :pk)",
                 ExpressionAttributeValues: {
-                    ":pk": { S: `REPOSITORY#${userId}#` }
+                    ":pk": `REPOSITORY#${userId}#`
                 }
             })
         );
