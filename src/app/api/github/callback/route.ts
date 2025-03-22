@@ -1,9 +1,9 @@
 import "server-only";
 
+import { Octokit } from "octokit";
+import { DynamoDBService } from "@/lib/ddb";
 import { NextRequest, NextResponse } from "next/server";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBService } from "@/lib/ddb";
-import { Octokit } from "octokit";
 
 export async function GET(request: NextRequest) {
 	const searchParams = new URL(request.url).searchParams;
