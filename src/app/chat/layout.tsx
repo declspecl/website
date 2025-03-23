@@ -6,6 +6,7 @@ import { DynamoDBService } from "@/lib/ddb";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { RepoSidebar } from "@/components/chat/RepoSidebar";
+import { ChatStateContainer } from "@/components/chat/ChatStateContainer";
 
 interface ChatPageLayoutProps {
     children: React.ReactNode;
@@ -38,9 +39,15 @@ export default async function ChatPageLayout({ children }: ChatPageLayoutProps) 
     return (
         <SidebarProvider>
             <div className="flex flex-row h-screen">
-                <RepoSidebar accessToken={accessToken} allRepos={allRepos} initialUserRepos={repos} />
+                <ChatStateContainer
+                    accessToken={accessToken}
+                    allRepos={allRepos}
+                    initialUserRepos={repos}
+                >
+                    <RepoSidebar />
 
-                {children}
+                    {children}
+                </ChatStateContainer>
             </div>
         </SidebarProvider>
     );

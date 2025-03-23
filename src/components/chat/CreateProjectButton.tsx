@@ -6,20 +6,17 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { BranchCombobox } from "./BranchCombobox";
 import { RepositoryCombobox } from "./RepositoryCombobox";
+import { useSidebarState } from "@/context/SidebarContext";
 import { LucideLoader2, LucidePlusCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface CreateProjectButtonProps {
-    accessToken: string;
-    allRepositories: {
-        id: number;
-        name: string;
-        description: string | null;
-        url: string;
-    }[];
 }
 
-export function CreateProjectButton({ accessToken, allRepositories }: CreateProjectButtonProps) {
+export function CreateProjectButton({ }: CreateProjectButtonProps) {
+    const [sidebarState, setSidebarState] = useSidebarState();
+    const { accessToken, allRepositories } = sidebarState;
+
     const router = useRouter();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedRepository, setSelectedRepository] = useState<string>("");
@@ -113,6 +110,29 @@ export function CreateProjectButton({ accessToken, allRepositories }: CreateProj
                         return;
                     }
 
+                    const octokit = new Octokit({ auth: accessToken });
+                    const userInfo = await octokit.rest.users.getAuthenticated();
+                    const repo = await octokit.rest.repos.get({
+                        owner: userInfo.data.login,
+                        repo: selectedRepository
+                    });
+
+                    setSidebarState((prev) => ({
+                        ...prev,
+                        userRepositories: [
+                            ...prev.userRepositories,
+                            {
+                                pk: `PROJECT#${userInfo.data.id}#${selectedRepository}`,
+                                userId: userInfo.data.id.toString(),
+                                repositoryName: selectedRepository,
+                                repositoryBranch: selectedRepositoryBranch,
+                                repositoryDescription: repo.data.description || "",
+                                repositoryId: repo.data.id.toString(),
+                                repositoryUrl: repo.data.html_url,
+                                chats: []
+                            }
+                        ]
+                    }));
                     setProjectCreationStatus("success");
                     setIsDialogOpen(false);
                     
