@@ -1,12 +1,11 @@
 import "server-only";
 
-import Link from "next/link";
 import { Octokit } from "octokit";
 import { cookies } from "next/headers";
 import { DynamoDBService } from "@/lib/ddb";
-import { Button } from "@/components/ui/button";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { CreateProjectButton } from "./CreateProjectButton";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { RepoSidebar } from "@/components/chat/RepoSidebar";
 
 interface ChatPageLayoutProps {
     children: React.ReactNode;
@@ -37,18 +36,12 @@ export default async function ChatPageLayout({ children }: ChatPageLayoutProps) 
     const repos = await ddbService.getRepositoriesForUser(userInfo.data.id.toString());
 
     return (
-        <div className="flex flex-row">
-            <div className="flex flex-col gap-2 overflow-y-scroll max-h-[100dvh]">
-                <CreateProjectButton accessToken={accessToken} allRepositories={allRepos} />
+        <SidebarProvider>
+            <div className="flex flex-row h-screen">
+                <RepoSidebar accessToken={accessToken} allRepos={allRepos} initialUserRepos={repos} />
 
-                {repos.map((repo) => (
-                    <Button key={`repository-${repo.repositoryName}`} asChild>
-                        <Link href={`/chat/${repo.repositoryName}`}>{repo.repositoryName}</Link>
-                    </Button>
-                ))}
+                {children}
             </div>
-
-            {children}
-        </div>
+        </SidebarProvider>
     );
 }

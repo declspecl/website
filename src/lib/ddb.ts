@@ -3,7 +3,7 @@ import { GetCommand, PutCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 
 const TABLE_NAME = "DDCTable";
 
-interface UserItem {
+export interface UserItem {
     pk: string;
     userId: string;
     email: string;
@@ -12,7 +12,7 @@ interface UserItem {
     githubUsername: string;
 }
 
-interface User {
+export interface User {
     userId: string;
     email: string;
     name: string;
@@ -20,24 +20,24 @@ interface User {
     githubUsername: string;
 }
 
-interface AccessTokenItem {
+export interface AccessTokenItem {
     pk: string;
     token: string;
     userId: string;
 }
 
-interface AccessToken {
+export interface AccessToken {
     token: string;
     userId: string;
 }
 
-interface Chat {
+export interface Chat {
     from: "user" | "website";
     message: string;
     createdAt: string;
 }
 
-interface RepositoryItem {
+export interface RepositoryItem {
     pk: string;
     userId: string;
     repositoryId: string;
@@ -48,7 +48,7 @@ interface RepositoryItem {
     chats: Chat[];
 }
 
-interface Repository {
+export interface Repository {
     userId: string;
     repositoryId: string;
     repositoryBranch: string;
