@@ -24,6 +24,11 @@ export default function Home() {
                                 Get Started
                             </Link>
                         </Button>
+                        <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                            <Link href="/hello">
+                                Say Hello
+                            </Link>
+                        </Button>
                     </div>
                 </div>
             </section>
