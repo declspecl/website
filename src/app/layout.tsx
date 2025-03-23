@@ -9,7 +9,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-    title: "DuckDuckCode",
+    title: {
+        default: "DuckDuckCode",
+        template: `%s | DuckDuckCode`
+    },
     description: "DuckDuckCode"
 };
 
