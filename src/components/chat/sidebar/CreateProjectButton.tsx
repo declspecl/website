@@ -10,10 +10,9 @@ import { useSidebarState } from "@/context/SidebarContext";
 import { LucideLoader2, LucidePlusCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
-interface CreateProjectButtonProps {
-}
+interface CreateProjectButtonProps {}
 
-export function CreateProjectButton({ }: CreateProjectButtonProps) {
+export function CreateProjectButton({}: CreateProjectButtonProps) {
     const [sidebarState, setSidebarState] = useSidebarState();
     const { accessToken, allRepositories } = sidebarState;
 
@@ -88,58 +87,60 @@ export function CreateProjectButton({ }: CreateProjectButtonProps) {
                     )}
                 </div>
 
-                <Button disabled={projectCreationStatus === "loading"} onClick={async () => {
-                    if (!selectedRepository || !selectedRepositoryBranch) return;
+                <Button
+                    disabled={projectCreationStatus === "loading"}
+                    onClick={async () => {
+                        if (!selectedRepository || !selectedRepositoryBranch) return;
 
-                    setProjectCreationStatus("loading");
+                        setProjectCreationStatus("loading");
 
-                    try {
-                        const response = await fetch("/api/repository", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                repositoryName: selectedRepository,
-                                repositoryBranch: selectedRepositoryBranch
-                            })
+                        try {
+                            const response = await fetch("/api/repository", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    repositoryName: selectedRepository,
+                                    repositoryBranch: selectedRepositoryBranch
+                                })
+                            });
+                        } catch (e) {
+                            setProjectCreationStatus("error");
+                            return;
+                        }
+
+                        const octokit = new Octokit({ auth: accessToken });
+                        const userInfo = await octokit.rest.users.getAuthenticated();
+                        const repo = await octokit.rest.repos.get({
+                            owner: userInfo.data.login,
+                            repo: selectedRepository
                         });
-                    }
-                    catch (e) {
-                        setProjectCreationStatus("error");
-                        return;
-                    }
 
-                    const octokit = new Octokit({ auth: accessToken });
-                    const userInfo = await octokit.rest.users.getAuthenticated();
-                    const repo = await octokit.rest.repos.get({
-                        owner: userInfo.data.login,
-                        repo: selectedRepository
-                    });
+                        setSidebarState((prev) => ({
+                            ...prev,
+                            userRepositories: [
+                                ...prev.userRepositories,
+                                {
+                                    pk: `PROJECT#${userInfo.data.id}#${selectedRepository}`,
+                                    userId: userInfo.data.id.toString(),
+                                    repositoryName: selectedRepository,
+                                    repositoryBranch: selectedRepositoryBranch,
+                                    repositoryDescription: repo.data.description || "",
+                                    repositoryId: repo.data.id.toString(),
+                                    repositoryUrl: repo.data.html_url,
+                                    chats: []
+                                }
+                            ]
+                        }));
+                        setProjectCreationStatus("success");
+                        setSelectedRepositoryBranch("");
+                        setSelectedRepository("");
+                        setIsDialogOpen(false);
 
-                    setSidebarState((prev) => ({
-                        ...prev,
-                        userRepositories: [
-                            ...prev.userRepositories,
-                            {
-                                pk: `PROJECT#${userInfo.data.id}#${selectedRepository}`,
-                                userId: userInfo.data.id.toString(),
-                                repositoryName: selectedRepository,
-                                repositoryBranch: selectedRepositoryBranch,
-                                repositoryDescription: repo.data.description || "",
-                                repositoryId: repo.data.id.toString(),
-                                repositoryUrl: repo.data.html_url,
-                                chats: []
-                            }
-                        ]
-                    }));
-                    setProjectCreationStatus("success");
-                    setSelectedRepositoryBranch("");
-                    setSelectedRepository("");
-                    setIsDialogOpen(false);
-                    
-                    router.push(`/chat/${selectedRepository}`);
-                }}>
+                        router.push(`/chat/${selectedRepository}`);
+                    }}
+                >
                     {projectCreationStatus === "loading" ? <LucideLoader2 className="w-4 h-4 animate-spin" /> : "Create Project"}
                 </Button>
             </DialogContent>

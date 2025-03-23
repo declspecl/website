@@ -18,29 +18,27 @@ const SidebarStateContext = createContext<SidebarState | null>(null);
 const SetSidebarStateContext = createContext<React.Dispatch<React.SetStateAction<SidebarState>> | null>(null);
 
 interface SidebarProviderProps {
-	initialValue: SidebarState;
-	children: React.ReactNode;
+    initialValue: SidebarState;
+    children: React.ReactNode;
 }
 
 export function SidebarStateProvider({ initialValue, children }: SidebarProviderProps) {
-	const [state, setState] = useState<SidebarState>(initialValue);
+    const [state, setState] = useState<SidebarState>(initialValue);
 
-	return (
+    return (
         <SidebarStateContext.Provider value={state}>
-            <SetSidebarStateContext.Provider value={setState}>
-                {children}
-            </SetSidebarStateContext.Provider>
+            <SetSidebarStateContext.Provider value={setState}>{children}</SetSidebarStateContext.Provider>
         </SidebarStateContext.Provider>
     );
 }
 
 export function useSidebarState(): [SidebarState, React.Dispatch<React.SetStateAction<SidebarState>>] {
-	const state = useContext(SidebarStateContext);
+    const state = useContext(SidebarStateContext);
     const setState = useContext(SetSidebarStateContext);
 
-	if (!state || !setState) {
-		throw new Error("useSidebarState must be used within a SidebarProvider");
-	}
+    if (!state || !setState) {
+        throw new Error("useSidebarState must be used within a SidebarProvider");
+    }
 
-	return [state, setState];
+    return [state, setState];
 }

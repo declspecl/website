@@ -5,10 +5,9 @@ import { useSidebarState } from "@/context/SidebarContext";
 import { CreateProjectButton } from "./CreateProjectButton";
 import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../../ui/sidebar";
 
-interface RepoSidebarProps {
-}
+interface RepoSidebarProps {}
 
-export function RepoSidebar({ }: RepoSidebarProps) {
+export function RepoSidebar({}: RepoSidebarProps) {
     const [sidebarState, setSidebarState] = useSidebarState();
     const { accessToken, allRepositories, userRepositories } = sidebarState;
 
@@ -20,9 +19,7 @@ export function RepoSidebar({ }: RepoSidebarProps) {
 
                     {userRepositories.map((repo) => (
                         <SidebarMenuItem key={`repository-${repo.repositoryName}`}>
-                            <SidebarMenuButton
-                                className="justify-start"
-                            >
+                            <SidebarMenuButton className="justify-start">
                                 <Link href={`/chat/${repo.repositoryName}`}>{repo.repositoryName}</Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -30,5 +27,5 @@ export function RepoSidebar({ }: RepoSidebarProps) {
                 </SidebarMenu>
             </SidebarContent>
         </Sidebar>
-    )
+    );
 }

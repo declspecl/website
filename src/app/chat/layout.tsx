@@ -39,11 +39,7 @@ export default async function ChatPageLayout({ children }: ChatPageLayoutProps) 
     return (
         <SidebarProvider>
             <div className="flex flex-row h-screen">
-                <ChatStateContainer
-                    accessToken={accessToken}
-                    allRepos={allRepos}
-                    initialUserRepos={repos}
-                >
+                <ChatStateContainer accessToken={accessToken} allRepos={allRepos} initialUserRepos={repos}>
                     <RepoSidebar />
 
                     {children}

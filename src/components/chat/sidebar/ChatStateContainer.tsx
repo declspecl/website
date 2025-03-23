@@ -17,11 +17,13 @@ interface ChatStateContainerProps {
 
 export function ChatStateContainer({ accessToken, allRepos, initialUserRepos, children }: ChatStateContainerProps) {
     return (
-        <SidebarStateProvider initialValue={{
-            accessToken,
-            allRepositories: allRepos,
-            userRepositories: initialUserRepos
-        }}>
+        <SidebarStateProvider
+            initialValue={{
+                accessToken,
+                allRepositories: allRepos,
+                userRepositories: initialUserRepos
+            }}
+        >
             {children}
         </SidebarStateProvider>
     );
