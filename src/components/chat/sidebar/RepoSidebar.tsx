@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSidebarState } from "@/context/SidebarContext";
 import { CreateProjectButton } from "./CreateProjectButton";
-import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
+import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../../ui/sidebar";
 
 interface RepoSidebarProps {
 }

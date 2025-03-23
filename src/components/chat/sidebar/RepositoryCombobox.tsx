@@ -42,7 +42,7 @@ export function RepositoryCombobox({ allRepositories, selectedRepository, setSel
                                         key={repository.name}
                                         value={repository.name}
                                         onSelect={(currentselectedRepository) => {
-                                            setSelectedRepository(currentselectedRepository === selectedRepository ? "" : currentselectedRepository);
+                                            setSelectedRepository(currentselectedRepository);
                                             setOpen(false);
                                         }}
                                     >

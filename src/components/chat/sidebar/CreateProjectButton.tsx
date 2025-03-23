@@ -134,6 +134,8 @@ export function CreateProjectButton({ }: CreateProjectButtonProps) {
                         ]
                     }));
                     setProjectCreationStatus("success");
+                    setSelectedRepositoryBranch("");
+                    setSelectedRepository("");
                     setIsDialogOpen(false);
                     
                     router.push(`/chat/${selectedRepository}`);

@@ -5,8 +5,8 @@ import { cookies } from "next/headers";
 import { DynamoDBService } from "@/lib/ddb";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { RepoSidebar } from "@/components/chat/RepoSidebar";
-import { ChatStateContainer } from "@/components/chat/ChatStateContainer";
+import { RepoSidebar } from "@/components/chat/sidebar/RepoSidebar";
+import { ChatStateContainer } from "@/components/chat/sidebar/ChatStateContainer";
 
 interface ChatPageLayoutProps {
     children: React.ReactNode;

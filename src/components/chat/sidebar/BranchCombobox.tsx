@@ -37,7 +37,7 @@ export function BranchCombobox({ allBranches, selectedBranch, setSelectedBranch 
                                         key={branch}
                                         value={branch}
                                         onSelect={(currentselectedBranch) => {
-                                            setSelectedBranch(currentselectedBranch === selectedBranch ? "" : currentselectedBranch);
+                                            setSelectedBranch(currentselectedBranch);
                                             setOpen(false);
                                         }}
                                     >
