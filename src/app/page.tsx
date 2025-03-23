@@ -2,11 +2,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Link from "next/link";
-
+import Image from "next/image";
+import duck from '../../public/logo.png'
 
 export default function Home() {
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col relative">
+            {/* Duck Decoration */}
+            <div className="absolute top-10 left-10">
+                <Image src={duck} alt="Duck Decoration" width={100} height={100} />
+            </div>
+
             {/* Get Started Section */}
             <section className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-background to-muted px-4 text-center pt-14">
                 <div className="space-y-6 max-w-4xl">
