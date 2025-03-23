@@ -5,6 +5,7 @@ import { Octokit } from "octokit";
 import { DynamoDBService } from "@/lib/ddb";
 import { NextRequest, NextResponse } from "next/server";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 
 const PublishChatSchema = z.object({
     message: z.string().nonempty()
@@ -67,6 +68,19 @@ export async function POST(request: NextRequest, { params }: PublishChatProps): 
         repositoryUrl: repo.data.html_url,
         chats: newChats
     });
+
+    const lambdaClient = new LambdaClient();
+    await lambdaClient.send(
+        new InvokeCommand({
+            FunctionName: "DdcLambda",
+            Payload: JSON.stringify({
+                accessToken,
+                repositoryName: repo.data.name,
+                repositoryBranch: repositoryItem.repositoryBranch,
+                userPrompt: payload.message
+            })
+        })
+    );
 
     return NextResponse.json(
         {
