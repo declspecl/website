@@ -21,6 +21,7 @@ interface CreateProjectButtonProps {
 
 export function CreateProjectButton({ accessToken, allRepositories }: CreateProjectButtonProps) {
     const router = useRouter();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedRepository, setSelectedRepository] = useState<string>("");
     const [selectedRepositoryBranch, setSelectedRepositoryBranch] = useState<string>("");
     const [selectedRepositoryBranches, setSelectedRepositoryBranches] = useState<string[]>([]);
@@ -30,14 +31,11 @@ export function CreateProjectButton({ accessToken, allRepositories }: CreateProj
         let isCancelled = false;
 
         (async () => {
-            setProjectCreationStatus("loading");
-
             const octokit = new Octokit({ auth: accessToken });
             const userInfo = await octokit.rest.users.getAuthenticated();
 
             if (!selectedRepository) {
                 setSelectedRepositoryBranches([]);
-                setProjectCreationStatus("idle");
                 return;
             }
 
@@ -48,18 +46,15 @@ export function CreateProjectButton({ accessToken, allRepositories }: CreateProj
                     owner: userInfo.data.login
                 });
             } catch (e) {
-                setProjectCreationStatus("error");
                 setSelectedRepositoryBranches([]);
                 return;
             }
 
             if (isCancelled) {
-                setProjectCreationStatus("idle");
                 return;
             }
             setSelectedRepositoryBranches(branches.data.map((branch) => branch.name));
             setSelectedRepositoryBranch(branches.data[0].name);
-            setProjectCreationStatus("idle");
         })();
 
         return () => {
@@ -68,7 +63,7 @@ export function CreateProjectButton({ accessToken, allRepositories }: CreateProj
     }, [accessToken, selectedRepository]);
 
     return (
-        <Dialog>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
                 <Button className="flex flex-row gap-2">
                     <span>Create new project</span>
@@ -99,16 +94,27 @@ export function CreateProjectButton({ accessToken, allRepositories }: CreateProj
                 <Button disabled={projectCreationStatus === "loading"} onClick={async () => {
                     if (!selectedRepository || !selectedRepositoryBranch) return;
 
-                    const response = await fetch("/api/repository", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            repositoryName: selectedRepository,
-                            repositoryBranch: selectedRepositoryBranch
-                        })
-                    });
+                    setProjectCreationStatus("loading");
+
+                    try {
+                        const response = await fetch("/api/repository", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                repositoryName: selectedRepository,
+                                repositoryBranch: selectedRepositoryBranch
+                            })
+                        });
+                    }
+                    catch (e) {
+                        setProjectCreationStatus("error");
+                        return;
+                    }
+
+                    setProjectCreationStatus("success");
+                    setIsDialogOpen(false);
                     
                     router.push(`/chat/${selectedRepository}`);
                 }}>
