@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useSidebarState } from "@/context/SidebarContext";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { LucideLoader2 } from "lucide-react";
 
 interface ChatMessageProps {
     message: string;
@@ -37,10 +38,17 @@ export function ChatMessage({ message, from, createdAt }: ChatMessageProps) {
     }, [sidebarState.accessToken]);
 
     return (
-        <div className={cn("flex flex-row justify-end items-end gap-4", { "flex-row-reverse justify-start": from === "website" })}>
+        <div className={cn("flex flex-row self-end items-end gap-4", { "flex-row-reverse self-start": from === "website" })}>
             <Card>
                 <CardContent className="mt-4 flex flex-row items-end justify-between gap-2">
-                    <p>{message}</p>
+                    {message.length ? (
+                        <p>{message}</p>
+                    ) : (
+                        <p className="inline-flex items-center flex-row gap-2">
+                            <span>I'm working on it...</span>
+                            <LucideLoader2 className="animate-spin" />
+                        </p>
+                    )}
                 </CardContent>
             </Card>
 

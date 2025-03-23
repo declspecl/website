@@ -1,21 +1,68 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LucideSend } from "lucide-react";
 import { RepositoryItem } from "@/lib/ddb";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatMessage } from "@/components/chat/chat/ChatMessage";
+import { useSidebarState } from "@/context/SidebarContext";
 
 interface ChatHistoryProps {
     repositoryItem: RepositoryItem;
 }
 
 export function ChatHistory({ repositoryItem }: ChatHistoryProps) {
+    const [sidebarState, setSidebarState] = useSidebarState();
+
     const [userPrompt, setUserPrompt] = useState<string>("");
     const [repositoryState, setRepositoryState] = useState<RepositoryItem>(repositoryItem);
     const [chatSubmissionState, setChatSubmissionState] = useState<"idle" | "loading">("idle");
+
+    useEffect(() => {
+        let pollingInterval: NodeJS.Timeout | null = null;
+
+        if (chatSubmissionState === "loading") {
+            pollingInterval = setInterval(async () => {
+                try {
+                    const updatedRepository: { repositoryItem: RepositoryItem } = await (await fetch(`/api/repository/${repositoryState.repositoryName}`, {
+                        method: "GET",
+                    })).json();
+                    if (updatedRepository.repositoryItem.chats[updatedRepository.repositoryItem.chats.length - 1].from === "website") {
+                        setRepositoryState(updatedRepository.repositoryItem);
+                        setChatSubmissionState("idle");
+                    }
+                    else {
+                        setRepositoryState({
+                            ...updatedRepository.repositoryItem,
+                            chats: [
+                                ...updatedRepository.repositoryItem.chats,
+                                {
+                                    message: "",
+                                    from: "website",
+                                    createdAt: new Date().toISOString(),
+                                }
+                            ]
+                        });
+                    }
+                } catch (e) {
+                    console.error("Error fetching repository data:", e);
+                }
+            }, 5000);
+        }
+        else {
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+            }
+        }
+
+        return () => {
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+            }
+        };
+    }, [chatSubmissionState, repositoryState.repositoryName]);
 
     return (
         <div className="p-4 h-[100dvh] grow flex flex-col gap-4">
@@ -26,7 +73,7 @@ export function ChatHistory({ repositoryItem }: ChatHistoryProps) {
                     <div className="flex flex-col gap-4">
                         {repositoryState.chats.map((chat) => (
                             <ChatMessage
-                                key={`chat-${chat.createdAt}`}
+                                key={`chat-${chat.from}-${chat.message}`}
                                 message={chat.message}
                                 from={chat.from}
                                 createdAt={chat.createdAt}
@@ -44,44 +91,51 @@ export function ChatHistory({ repositoryItem }: ChatHistoryProps) {
                     className="grow"
                     placeholder="Type your message here..."
                     rows={1}
-                /> 
+                />
 
-                <Button disabled={chatSubmissionState === "loading"} className="py-6 px-4 flex flex-row gap-2" onClick={async () => {
-                    setChatSubmissionState("loading");
+                <Button
+                    disabled={chatSubmissionState === "loading"}
+                    className="py-6 px-4 flex flex-row gap-2"
+                    onClick={async () => {
+                        setChatSubmissionState("loading");
 
-                    const prevState = repositoryState;
-                    setRepositoryState((prevState) => ({
-                        ...prevState,
-                        chats: [
-                            ...prevState.chats,
-                            {
-                                message: userPrompt,
-                                from: "user",
-                                createdAt: new Date().toISOString()
-                            }
-                        ]
-                    }));
+                        const prevState = repositoryState;
+                        setRepositoryState((prevState) => ({
+                            ...prevState,
+                            chats: [
+                                ...prevState.chats,
+                                {
+                                    message: userPrompt,
+                                    from: "user",
+                                    createdAt: new Date().toISOString(),
+                                },
+                                {
+                                    message: "",
+                                    from: "website",
+                                    createdAt: new Date().toISOString(),
+                                }
+                            ],
+                        }));
 
-                    try {
-                        await fetch(`/api/repository/${repositoryState.repositoryName}/chat`, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                message: userPrompt
-                            })
-                        });
-                    }
-                    catch (e) {
-                        console.error(e);
-                        setRepositoryState(prevState);
-                        alert("An error occurred while sending the message");
-                    }
+                        try {
+                            await fetch(`/api/repository/${repositoryState.repositoryName}/chat`, {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                    message: userPrompt,
+                                }),
+                            });
+                        } catch (e) {
+                            console.error(e);
+                            setRepositoryState(prevState);
+                            alert("An error occurred while sending the message");
+                        }
 
-                    setUserPrompt("");
-                    setChatSubmissionState("idle");
-                }}>
+                        setUserPrompt("");
+                    }}
+                >
                     <LucideSend className="w-8 h-8" />
                 </Button>
             </div>
