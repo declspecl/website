@@ -14,7 +14,7 @@ export function ChatHistory({ messages, userAvatarUrl }: ChatHistoryProps) {
     const [sidebarState, setSidebarState] = useSidebarState();
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full p-4">
             <div className="flex-grow overflow-y-auto">
                 {messages.map((chat, index) => (
                     <div
@@ -31,7 +31,7 @@ export function ChatHistory({ messages, userAvatarUrl }: ChatHistoryProps) {
                         )}
 
                         <div
-                            className={`max-w-[80%] rounded-lg p-3 ${chat.from === "user" ? "bg-blue-100 text-right" : "bg-gray-100"}`}
+                            className={`max-w-[80%] sm:max-w-[60%] rounded-lg p-3 ${chat.from === "user" ? "bg-blue-100 text-right" : "bg-gray-100"}`}
                         >
                             {chat.message}
                         </div>
