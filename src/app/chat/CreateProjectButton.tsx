@@ -1,13 +1,12 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { LucidePlusCircle } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { RepositoryCombobox } from "./RepositoryCombobox";
-import { useEffect, useMemo, useState } from "react";
 import { Octokit } from "octokit";
+import { useEffect, useState } from "react";
+import { LucidePlusCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { BranchCombobox } from "./BranchCombobox";
+import { RepositoryCombobox } from "./RepositoryCombobox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface CreateProjectButtonProps {
     accessToken: string;
@@ -37,8 +36,7 @@ export function CreateProjectButton({ accessToken, allRepositories }: CreateProj
                     repo: selectedRepository,
                     owner: userInfo.data.login
                 });
-            }
-            catch (e) { 
+            } catch (e) {
                 setSelectedRepositoryBranches([]);
                 return;
             }
@@ -49,7 +47,7 @@ export function CreateProjectButton({ accessToken, allRepositories }: CreateProj
 
         return () => {
             isCancelled = true;
-        }
+        };
     }, [accessToken, selectedRepository]);
 
     return (
@@ -66,16 +64,22 @@ export function CreateProjectButton({ accessToken, allRepositories }: CreateProj
                 </DialogHeader>
 
                 <div className="flex flex-col gap-4">
-                    <RepositoryCombobox selectedRepository={selectedRepository} setSelectedRepository={setSelectedRepository} allRepositories={allRepositories} />
+                    <RepositoryCombobox
+                        selectedRepository={selectedRepository}
+                        setSelectedRepository={setSelectedRepository}
+                        allRepositories={allRepositories}
+                    />
 
                     {selectedRepository && selectedRepositoryBranches && (
-                        <BranchCombobox allBranches={selectedRepositoryBranches} selectedBranch={selectedRepositoryBranch} setSelectedBranch={setSelectedRepositoryBranch} />
+                        <BranchCombobox
+                            allBranches={selectedRepositoryBranches}
+                            selectedBranch={selectedRepositoryBranch}
+                            setSelectedBranch={setSelectedRepositoryBranch}
+                        />
                     )}
                 </div>
 
-                <Button onClick={async () => {
-
-                }}>Submit</Button>
+                <Button onClick={async () => {}}>Submit</Button>
             </DialogContent>
         </Dialog>
     );

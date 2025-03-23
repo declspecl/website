@@ -18,12 +18,14 @@ export default async function ChatPage() {
     const userInfo = await octokit.rest.users.getAuthenticated();
     const ddbClient = new DynamoDBClient();
     const ddbService = new DynamoDBService(ddbClient);
-    const allRepos = (await octokit.rest.repos.listForAuthenticatedUser({
-        type: "owner",
-        sort: "created",
-        direction: "desc",
-        per_page: 100
-    })).data.map((repo) => ({
+    const allRepos = (
+        await octokit.rest.repos.listForAuthenticatedUser({
+            type: "owner",
+            sort: "created",
+            direction: "desc",
+            per_page: 100
+        })
+    ).data.map((repo) => ({
         id: repo.id,
         name: repo.name,
         description: repo.description,
@@ -31,7 +33,7 @@ export default async function ChatPage() {
     }));
     const repos = await ddbService.getRepositoriesForUser(userInfo.data.id.toString());
 
-    console.log(repos.length)
+    console.log(repos.length);
     console.log(repos);
 
     return (
@@ -41,9 +43,7 @@ export default async function ChatPage() {
 
                 {repos.map((repo) => (
                     <Button key={`repository-${repo.repositoryName}`} asChild>
-                        <Link href={`/chat/${repo.repositoryName}`}>
-                            {repo.repositoryName}
-                        </Link>
+                        <Link href={`/chat/${repo.repositoryName}`}>{repo.repositoryName}</Link>
                     </Button>
                 ))}
             </div>
