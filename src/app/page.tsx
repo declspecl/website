@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Link from "next/link";
 
@@ -22,6 +22,11 @@ export default function Home() {
                         <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
                             <Link href="/chat">
                                 Get Started
+                            </Link>
+                        </Button>
+                        <Button asChild size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
+                            <Link href="/prizes">
+                                View Prizes
                             </Link>
                         </Button>
                     </div>
