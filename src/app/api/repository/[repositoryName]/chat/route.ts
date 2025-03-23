@@ -66,7 +66,8 @@ export async function POST(request: NextRequest, { params }: PublishChatProps): 
         repositoryDescription: repo.data.description || "",
         repositoryBranch: repositoryItem.repositoryBranch,
         repositoryUrl: repo.data.html_url,
-        chats: newChats
+        chats: newChats,
+        lastUpdatedAt: new Date().toISOString()
     });
 
     const lambdaClient = new LambdaClient();

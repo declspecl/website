@@ -46,6 +46,7 @@ export interface RepositoryItem {
     repositoryDescription: string;
     repositoryUrl: string;
     chats: Chat[];
+    lastUpdatedAt: string;
 }
 
 export interface Repository {
@@ -56,6 +57,7 @@ export interface Repository {
     repositoryDescription: string;
     repositoryUrl: string;
     chats: Chat[];
+    lastUpdatedAt: string;
 }
 
 export class DynamoDBService {
@@ -156,7 +158,8 @@ export class DynamoDBService {
             repositoryName: repository.repositoryName,
             repositoryDescription: repository.repositoryDescription,
             repositoryUrl: repository.repositoryUrl,
-            chats: repository.chats
+            chats: repository.chats,
+            lastUpdatedAt: repository.lastUpdatedAt
         };
 
         const response = await this.ddbClient.send(

@@ -15,7 +15,7 @@ export function RepoSidebar({}: RepoSidebarProps) {
     const { accessToken, allRepositories, userRepositories } = sidebarState;
 
     const [searchQuery, setSearchQuery] = useState("");
-    const filteredRepos = sidebarState.userRepositories.filter((repo) => repo.repositoryName.toLowerCase().includes(searchQuery.toLowerCase()));
+    const filteredRepos = sidebarState.userRepositories.filter((repo) => repo.repositoryName.toLowerCase().includes(searchQuery.toLowerCase())).sort((a, b) => new Date(b.lastUpdatedAt).getTime() - new Date(a.lastUpdatedAt).getTime());
 
     return (
         <Sidebar collapsible="none" className="min-w-60">

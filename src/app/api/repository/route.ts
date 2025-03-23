@@ -49,7 +49,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         repositoryDescription: repo.data.description || "",
         repositoryBranch: payload.repositoryBranch,
         repositoryUrl: repo.data.html_url,
-        chats: []
+        chats: [],
+        lastUpdatedAt: new Date().toISOString()
     });
     console.log("Created repository");
 

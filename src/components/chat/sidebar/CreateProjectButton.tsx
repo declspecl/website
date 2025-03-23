@@ -129,7 +129,8 @@ export function CreateProjectButton({}: CreateProjectButtonProps) {
                                     repositoryDescription: repo.data.description || "",
                                     repositoryId: repo.data.id.toString(),
                                     repositoryUrl: repo.data.html_url,
-                                    chats: []
+                                    chats: [],
+                                    lastUpdatedAt: new Date().toUTCString()
                                 }
                             ]
                         }));
